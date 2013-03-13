@@ -1,0 +1,13 @@
+name: GriefPolice Mobile
+main: me.andrew.GriefPolice.GriefPolice
+version: 1.0
+commands:
+  informme:
+    description: Tells the player what blocks have been broken.
+    usage: /<command>
+  uninformme:
+    description: Removes the notifications of broken blocks.
+    usage: /<command>
+  initdb:
+    description: Initializes the tracking database. Only run from the console.
+    usage: /<command>
