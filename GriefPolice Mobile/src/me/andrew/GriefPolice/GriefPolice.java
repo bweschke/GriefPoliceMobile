@@ -27,7 +27,7 @@ public class GriefPolice extends JavaPlugin
 	private final GriefPoliceListener blockListener = new GriefPoliceListener(this);
 	public final ArrayList<String> GriefPoliceUsers = new ArrayList<String>();
 	
-	private GriefPoliceSqlite gpolicesqlite = new GriefPoliceSqlite(this);
+	public GriefPoliceSqlite gpolicesqlite = null;
 	
 	@Override
 	public void onEnable()
@@ -35,7 +35,12 @@ public class GriefPolice extends JavaPlugin
 		
 		try {
             final File[] libs = new File[] {
-                    new File(getDataFolder(), "sqlite4java.jar") };
+                    new File(getDataFolder(), "sqlite4java.jar"),
+                    new File(getDataFolder(), "commons-logging-1.1.1.jar"),
+                    new File(getDataFolder(), "httpcore-4.2.3.jar"),
+                    new File(getDataFolder(), "httpcore-nio-4.2.3.jar"),
+                    new File(getDataFolder(), "org.apache.httpcomponents.httpclient_4.2.3.jar"),
+                    new File(getDataFolder(), "gson-2.2.2.jar")};
             for (final File lib : libs) {
                 if (!lib.exists()) {
                     JarUtils.extractFromJar(lib.getName(),
@@ -71,7 +76,7 @@ public class GriefPolice extends JavaPlugin
         } catch (final Exception e) {
             e.printStackTrace();
         }		
-		
+		gpolicesqlite = new GriefPoliceSqlite(this);
 		log.info("[GriefPolice] has been enabled!"); 
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new GriefPoliceListener(this), this);
@@ -96,6 +101,7 @@ public class GriefPolice extends JavaPlugin
     @Override
     public void onDisable()
     {
+    	gpolicesqlite.StopSQLQueue();
     	log.info("[GriefPolice] has been disabled!");
     }
     
@@ -125,7 +131,7 @@ public boolean enabled(Player player)
 @Override
 public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 {
-		if (cmd.getName().equalsIgnoreCase("initdb")) {
+		/*if (cmd.getName().equalsIgnoreCase("initdb")) {
 			if (!(sender instanceof Player))
 			{
 				try {
@@ -138,7 +144,8 @@ public boolean onCommand(CommandSender sender, Command cmd, String label, String
 			}
 			return true;
 		}
-		else if (cmd.getName().equalsIgnoreCase("informme"))
+		else*/
+		if (cmd.getName().equalsIgnoreCase("informme"))
          {
         	 if (!(sender instanceof Player))
         	 {

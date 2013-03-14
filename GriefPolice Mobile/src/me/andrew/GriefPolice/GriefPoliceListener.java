@@ -3,11 +3,14 @@ package me.andrew.GriefPolice;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 
 public class GriefPoliceListener implements Listener
 {
@@ -27,9 +30,18 @@ public class GriefPoliceListener implements Listener
 	}
 	
 	@EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        Player player = event.getPlayer();
+        Block blk = event.getBlockPlaced();
+        Location blkloc = blk.getLocation();
+        
+        plugin.gpolicesqlite.blockPlacement(blkloc.getBlockX(), blkloc.getBlockY(), blkloc.getBlockZ(), player.getName(), blk.getTypeId()); 
+    }	
+	
+	@EventHandler
 	public void onBlockBreak(BlockBreakEvent event)
 	{
-		if (plugin.isEnabled())
+		if (plugin.isEnabled()) {
 			log.info(event.getPlayer()+" broke a block!!!");
 			for(Iterator<String> p = plugin.GriefPoliceUsers.iterator(); p.hasNext(); )
 			{
@@ -42,6 +54,11 @@ public class GriefPoliceListener implements Listener
 					plugin.GriefPoliceUsers.remove(playertonotify);
 				}
 			}
+	        Player player = event.getPlayer();
+	        Block blk = event.getBlock();
+	        Location blkloc = blk.getLocation();
+			plugin.gpolicesqlite.blockBreak(blkloc.getBlockX(), blkloc.getBlockY(), blkloc.getBlockZ(), player.getName(), blk.getTypeId());
+		}
 	}
 	
 	
